@@ -1,0 +1,8 @@
+module.exports = {
+  CANVAS_WIDTH: 400,
+  CANVAS_HEIGHT: 600,
+  BALL_RADIUS: 10,
+  HOLE_RADIUS: 15,
+  CP_WIDTH: 100,
+  CP_HEIGHT: 300, 
+}
