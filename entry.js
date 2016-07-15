@@ -129,8 +129,8 @@ function buildObstacles (level) {
 
 function draw() {
   ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
-  drawBall();
   drawHole();
+  drawBall();
   drawScore();
   if (obstNotBuilt) {
     buildObstacles(level);
