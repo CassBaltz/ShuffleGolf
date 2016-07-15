@@ -53,12 +53,13 @@
 	let canvasAim = document.getElementById("canvasAim");
 	let ctxAim = canvasAim.getContext("2d");
 	
+	let obstNotBuilt = true;
 	let ballRadius = Constants.BALL_RADIUS;
 	let xPos = Constants.CANVAS_WIDTH/2;
 	let yPos = 15 + ballRadius;
 	let yHoleStart = Constants.CANVAS_HEIGHT - (3*Constants.HOLE_RADIUS);
 	let holeRadius = Constants.HOLE_RADIUS;
-	let strokes = 0;
+	let strokes = 3;
 	let initialPower = 0;
 	let deltX = 0;
 	let deltY = 0;
@@ -66,6 +67,7 @@
 	let mouseX, ballX, ballY, mouseY;
 	let masterRadians, masterPower;
 	let obstArray = [];
+	let level = 1;
 	window.mouseX
 	window.mouseY
 	
@@ -114,10 +116,10 @@
 	    return;
 	  } else if (tot > 150) {
 	    initialPower = 150;
-	    strokes += 1;
+	    strokes --;
 	  } else {
 	    initialPower = tot;
-	    strokes += 1;
+	    strokes --;
 	  }
 	
 	  deltX = (Math.cos(masterRadians));
@@ -146,16 +148,17 @@
 	};
 	
 	function buildObstacles (level) {
-	  let x, y;
-	  let status;
-	  for (let i = 0; i < (level * 3); i++) {
-	    x = Math.floor(Math.random() * ((Constants.CANVAS_WIDTH - (OBS_RAD * 2))- (Constants.OBS_RAD * 2)) + (Constants.OBS_RAD * 2));
-	    y = Math.floor(Math.random() * ((Constants.CANVAS_HEIGHT - 50 - (OBS_RAD * 2)) - 50 + (Constants.OBS_RAD * 2)) + 50 + (Constants.OBS_RAD * 2));
+	  let i, x, y, dx, dy, distance;
+	  let status = true;
+	  i = 0;
+	  while (i < (level + 3)) {
+	    x = Math.floor(Math.random() * ((Constants.CANVAS_WIDTH - (Constants.OBS_RAD)) - (Constants.OBS_RAD)) + (Constants.OBS_RAD));
+	    y = Math.floor(Math.random() * ((Constants.CANVAS_HEIGHT - 100) - 75) + 75);
 	    for (let j = 0; j < obstArray.length; j++ ) {
 	      status = true;
-	      let dx = x - obstArray[j][0];
-	      let dy = y - obstArray[j][1];
-	      let distance = Math.sqrt(dx * dx + dy * dy);
+	      dx = x - obstArray[j][0];
+	      dy = y - obstArray[j][1];
+	      distance = Math.sqrt(dx * dx + dy * dy);
 	      if (distance < (Constants.OBS_RAD * 2) + (Constants.BALL_RADIUS * 6)) {
 	        status = false;
 	        break;
@@ -163,8 +166,11 @@
 	    }
 	    if (status) {
 	      obstArray.push([x, y]);
+	      i++;
 	    }
+	
 	  }
+	  obstNotBuilt = false;
 	}
 	
 	function draw() {
@@ -172,15 +178,40 @@
 	  drawBall();
 	  drawHole();
 	  drawScore();
-	  if (initialPower > .5) {
+	  if (obstNotBuilt) {
+	    buildObstacles(level);
+	  }
+	  drawObstacles();
+	  if (initialPower > .4) {
 	    xPos = xPos + (deltX * initialPower/10);
 	    yPos = yPos + (deltY * initialPower/10);
 	    initialPower *= .97;
-	    console.log(initialPower)
 	    checkStatus();
+	  } else {
+	    let holeX = xPos - (Constants.CANVAS_WIDTH/2);
+	    let holeY = yPos - yHoleStart;
+	    let distance = Math.sqrt((holeX * holeX) + (holeY * holeY));
+	    if (distance < (Constants.HOLE_RADIUS - ballRadius/2)) {
+	      alertWinner();
+	    }
 	
+	    if (strokes === 0) {
+	      endGame();
+	    }
+	  }
 	
-	    //update x&y pos of ball
+	}
+	
+	function drawObstacles () {
+	  let x, y, i;
+	  for (i = 0; i < obstArray.length; i++) {
+	    x = obstArray[i][0];
+	    y = obstArray[i][1];
+	    ctx.beginPath();
+	    ctx.arc(x, y, Constants.OBS_RAD, 0, Math.PI*2);
+	    ctx.fillStyle = "red";
+	    ctx.fill();
+	    ctx.closePath
 	  }
 	}
 	
@@ -196,17 +227,34 @@
 	
 	function checkStatus() {
 	  if (xPos < 0) {
-	    initialPower = 0;
-	    xPos = ballRadius;
-	    strokes += 2;
+	    endGame();
 	  }
 	
 	  if (xPos > Constants.CANVAS_WIDTH) {
-	    initialPower = 0;
-	    xPos = Constants.CANVAS_WIDTH - ballRadius;
-	    strokes += 2;
+	    endGame();
 	  }
+	
+	  if (yPos > Constants.CANVAS_HEIGHT) {
+	    endGame();
+	  }
+	
+	  for (let i = 0; i < obstArray.length; i++ ) {
+	    var circle1 = {radius: Constants.OBS_RAD, x: obstArray[i][0], y: obstArray[i][1]};
+	    var circle2 = {radius: ballRadius, x: xPos, y: yPos};
+	
+	    var dx = circle1.x - circle2.x;
+	    var dy = circle1.y - circle2.y;
+	    var distance = Math.sqrt(dx * dx + dy * dy);
+	
+	    if (distance < circle1.radius + circle2.radius) {
+	        endGame();
+	    }
+	  }
+	
+	
+	
 	}
+	
 	
 	function drawScore () {
 	  ctx.font = "20px Georgia";
@@ -217,9 +265,9 @@
 	function drawHole() {
 	  ctx.beginPath();
 	  ctx.arc(Constants.CANVAS_WIDTH/2, yHoleStart, holeRadius, 0, Math.PI*2);
-	  ctx.fillStyle = "black";
-	  ctx.fill();
-	  ctx.closePath
+	  ctx.strokeStyle = "black";
+	  ctx.lineWidth = 5;
+	  ctx.stroke();
 	}
 	
 	function drawHitDetails(xPos, yPos, xEnd, yEnd) {
@@ -291,7 +339,26 @@
 	  }
 	  masterRadians = slope;
 	  return slope
+	}
 	
+	function alertWinner() {
+	  xPos = Constants.CANVAS_WIDTH/2;
+	  yPos = 15 + ballRadius;
+	  obstNotBuilt = true;
+	  obstArray = [];
+	  strokes = 3;
+	  level ++;
+	  window.alert("Congrats, you won.")
+	}
+	
+	function endGame() {
+	  xPos = Constants.CANVAS_WIDTH/2;
+	  yPos = 15 + ballRadius;
+	  obstNotBuilt = true;
+	  obstArray = [];
+	  strokes = 3;
+	  initialPower = 0;
+	  window.alert("Sorry, try again.")
 	}
 	
 	// (Constants.ARC_CONST)/2
@@ -306,13 +373,13 @@
 	  CANVAS_WIDTH: 600,
 	  CANVAS_HEIGHT: 600,
 	  BALL_RADIUS: 6,
-	  HOLE_RADIUS: 12,
+	  HOLE_RADIUS: 16,
 	  CP_WIDTH: 100,
 	  CP_HEIGHT: 300,
 	  CA_WIDTH: 150,
 	  CA_HEIGHT: 150,
 	  ARC_CONST: .5,
-	  OBS_RAD: 20
+	  OBS_RAD: 30
 	}
 
 
