@@ -209,7 +209,7 @@
 	    y = obstArray[i][1];
 	    ctx.beginPath();
 	    ctx.arc(x, y, Constants.OBS_RAD, 0, Math.PI*2);
-	    ctx.fillStyle = "red";
+	    ctx.fillStyle = "yellow";
 	    ctx.fill();
 	    ctx.closePath
 	  }
@@ -218,7 +218,7 @@
 	function drawBall() {
 	  ctx.beginPath();
 	  ctx.arc(xPos, yPos, ballRadius, 0, Math.PI*2);
-	  ctx.fillStyle = "white";
+	  ctx.fillStyle = "#06425C";
 	  ctx.fill();
 	  ctx.closePath();
 	  // setDirection();
@@ -265,9 +265,9 @@
 	function drawHole() {
 	  ctx.beginPath();
 	  ctx.arc(Constants.CANVAS_WIDTH/2, yHoleStart, holeRadius, 0, Math.PI*2);
-	  ctx.strokeStyle = "black";
-	  ctx.lineWidth = 5;
-	  ctx.stroke();
+	  ctx.fillStyle = "#F2F2F2";
+	  // ctx.lineWidth = 5;
+	  ctx.fill();
 	}
 	
 	function drawHitDetails(xPos, yPos, xEnd, yEnd) {
@@ -289,14 +289,14 @@
 	
 	  ctxPower.beginPath();
 	  ctxPower.rect(0, 0, Constants.CP_WIDTH, (tot * 2));
-	  ctxPower.fillStyle = "red";
+	  ctxPower.fillStyle = "#F2F2F2";
 	  ctxPower.fill();
 	  ctxPower.closePath();
 	
 	  ctxAim.beginPath();
 	  ctxAim.arc((Constants.CA_WIDTH/2), (Constants.CA_HEIGHT/2), Math.floor(Constants.CA_WIDTH/3), startRad - (Constants.ARC_CONST/2), (startRad + Constants.ARC_CONST));
 	  ctxAim.lineWidth = 15;
-	  ctxAim.strokeStyle = "red";
+	  ctxAim.strokeStyle = "#F2F2F2";
 	  ctxAim.stroke();
 	}
 	

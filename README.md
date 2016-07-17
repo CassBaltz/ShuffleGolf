@@ -1,6 +1,6 @@
 # Shuffleboard
 
-[Live Putt-Putt] (https://cassbaltz.github.io/Shuffleboard/)
+[Live Shuffleboard] (https://cassbaltz.github.io/Shuffleboard/)
 
 Shuffleboard is a modified, single-player shuffleboard game that allows players to test their skill. The game uses JavaScript, CSS, and HTML. Specifically, the animation and gameplay are displayed using HTML5's canvas feature.
 
@@ -10,6 +10,8 @@ Players are given three miss attempts per series. A series consists of a culmina
 
 ## Gameplay
 
-The disk slides by having a player click and hold the disk with a mouse pointer, drag the mouse back -- like a slingshot or standard slide in shuffleboard, and then release the mouse with desired direction and speed. The disk slides very similarly to a standard disk using a fairly simple deceleration formula. After a turn, the player will either advance to the next level or have to replay the same level with one less turn, depending on how he or she fared during the previous turn. Points are accumulated by advancing levels and using less than the allotted strokes available to score in the target. This game has no database attached, so score persistence does not exist. That could eventually be added later.
+The disk slides by having a player click and hold the disk with a mouse pointer, drag the mouse back -- like a slingshot or standard slide in shuffleboard, and then release the mouse with desired direction and speed. The disk slides very similarly to a standard disk using a fairly simple deceleration formula. After a turn, the player will either advance to the next level or have to replay the same level with one less turn, depending on how he or she fared during the previous turn. Points are accumulated by advancing levels and using less than the allotted strokes available to score in the target. This game does not currently have a database attached, so score persistence does not exist through page refreshes. A database could eventually be added later.
 
 ## Development
+
+The game uses JavaScript for its functionality, gameplay, and computations with HTML/CSS for presentation. The game is drawn on three different canvas objects: 1) board, 2) directional meter, 3) power meter. Three separate canvas objects made for a better rendering experience and gave the board a more open feel. Logic uses a combination of listeners which capture pointer deltas on repeatedly through quick JavaScript interval calculations. These listeners interacting as desired was probably the most challenging part of developing this game. However, I believe it offers a very realistic user experience for throwing the disk. 
