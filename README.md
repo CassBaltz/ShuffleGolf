@@ -1,8 +1,8 @@
-# Shuffleboard
+# ShuffleGolf
 
-[Live Shuffleboard] (https://cassbaltz.github.io/ShuffleGolf/)
+[Live ShuffleGolf] (https://cassbaltz.github.io/ShuffleGolf/)
 
-Shuffleboard is a modified, single-player shuffleboard game that allows players to test their skill. The game uses JavaScript, CSS, and HTML. Specifically, the animation and gameplay are displayed using HTML5's canvas feature.
+ShuffleGolf is a modified, single-player shuffleGolf game that allows players to test their skill. The game uses JavaScript, CSS, and HTML. Specifically, the animation and gameplay are displayed using HTML5's canvas feature.
 
 ## Rules
 
