@@ -1,27 +1,44 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="Slidebars-2.0.2/dist/slidebars.css">
         <link rel="stylesheet" type="text/css" href="game.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     </head>
+
     <body>
+      <div id="main-canvas" canvas="container">
+        <aside>
+          <h1>Shuffle Golf</h1>
+          <ul>
+            <li id="about">Components</li>
+            <li id="instructions">Instructions</li>
+            <li id="play">Start Game</li>
+          </ul>
+        </aside>
 
-      <aside>
-        <h1>Shuffle Golf</h1>
-        <ul>
-          <li>About</li>
-          <li>How to Play</li>
-        </ul>
-      </aside>
-
-      <div class="canvas-items">
-        <canvas id="canvasBoard" width="600" height="600"></canvas>
-        <div class="shooting-info">
-          <canvas id="canvasPower" width="100" height="300"></canvas>
-          <canvas id="canvasAim" width="150" height="150"></canvas>
+        <div class="canvas-items">
+          <canvas id="canvasBoard" width="600" height="600"></canvas>
+          <div class="shooting-info">
+            <canvas id="canvasPower" width="100" height="300"></canvas>
+            <canvas id="canvasAim" width="150" height="150"></canvas>
+          </div>
         </div>
+
       </div>
 
-      <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
+      <div off-canvas="id-1 right push">
+        <h3 class="right" id="close-sidebar">Close</h3>
+        <h1 class="slidebar">Components</h1>
+        <h3>Click to learn more about each piece</h3>
+        <h6 class="items" id="disk">Disk</h6>
+        <h6 class="items" id="target">Target</h6>
+        <h6 class="items" id="obstacle">Obstacle</h6>
+        <h6 class="items" id="aim-meter">Aim Meter</h6>
+        <h6 class="items" id="power-meter">Power Meter</h6>
+      </div>
     </body>
+    <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
 </html>

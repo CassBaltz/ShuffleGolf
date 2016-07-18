@@ -1,4 +1,5 @@
 const Constants = require('./constants');
+const slidebars = require('./Slidebars-2.0.2/dist/slidebars')
 
 let canvasBoard = document.getElementById("canvasBoard");
 let ctx = canvasBoard.getContext("2d");
@@ -163,7 +164,7 @@ function drawObstacles () {
     y = obstArray[i][1];
     ctx.beginPath();
     ctx.arc(x, y, Constants.OBS_RAD, 0, Math.PI*2);
-    ctx.fillStyle = "yellow";
+    ctx.fillStyle = "#B7695C";
     ctx.fill();
     ctx.closePath
   }
@@ -204,9 +205,6 @@ function checkStatus() {
         endGame();
     }
   }
-
-
-
 }
 
 
@@ -243,14 +241,14 @@ function drawHitDetails(xPos, yPos, xEnd, yEnd) {
 
   ctxPower.beginPath();
   ctxPower.rect(0, 0, Constants.CP_WIDTH, (tot * 2));
-  ctxPower.fillStyle = "#F2F2F2";
+  ctxPower.fillStyle = "#814374";
   ctxPower.fill();
   ctxPower.closePath();
 
   ctxAim.beginPath();
   ctxAim.arc((Constants.CA_WIDTH/2), (Constants.CA_HEIGHT/2), Math.floor(Constants.CA_WIDTH/3), startRad - (Constants.ARC_CONST/2), (startRad + Constants.ARC_CONST));
   ctxAim.lineWidth = 15;
-  ctxAim.strokeStyle = "#F2F2F2";
+  ctxAim.strokeStyle = "#814374";
   ctxAim.stroke();
 }
 
@@ -315,5 +313,117 @@ function endGame() {
   window.alert("Sorry, try again.")
 }
 
+( function ( $ ) {
+  // Initialize Slidebars
+  var controller = new slidebars();
+  controller.init();
+  $( "#about" ).on( 'click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    controller.open( 'id-1' );
+  } );
+
+  $("#close-sidebar").on('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    controller.close( 'id-1');
+  });
+
+
+} ) ( jQuery );
+
+let diskClick = false;
+$("#disk").on('click', function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (diskClick === false) {
+    $("<p>The disk is what you throw towards the target by clicking on it and then dragging your mouse back to determine power and speed.</p>").appendTo("#disk");
+    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+    drawBall();
+    diskClick = true;
+  } else {
+    $("#disk").children("p").remove();
+    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+    diskClick= false;
+  }
+})
+
+let targetClick = false;
+$("#target").on('click', function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (targetClick === false) {
+    $("<p>To advance a round, have your disk rest completely within the target area</p>").appendTo("#target");
+    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+    drawHole();
+    targetClick = true;
+  } else {
+    $("#target").children("p").remove();
+    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+    targetClick = false;
+  }
+})
+
+let obstacleClick = false;
+$("#obstacle").on('click', function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (obstacleClick === false) {
+    $("<p>Your disk cannot touch obstacles, or you will lose a turn.</p>").appendTo("#obstacle");
+    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+    obstArray = [[Constants.CANVAS_WIDTH/2, Constants.CANVAS_HEIGHT/2]];
+    drawObstacles();
+    obstacleClick = true;
+  } else {
+    $("#obstacle").children("p").remove();
+    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+    obstacleClick = false;
+  }
+})
+
+let aimMeterClick = false;
+$("#aim-meter").on('click', function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (aimMeterClick === false) {
+    $("<p>The aim meter shows you the direction your disk is aimed</p>").appendTo("#aim-meter");
+
+    ctxAim.beginPath();
+    ctxAim.arc((Constants.CA_WIDTH/2), (Constants.CA_HEIGHT/2), Math.floor(Constants.CA_WIDTH/3), 2.5 - (Constants.ARC_CONST/2), (2.5 + Constants.ARC_CONST));
+    ctxAim.lineWidth = 15;
+    ctxAim.strokeStyle = "#814374";
+    ctxAim.stroke();
+    aimMeterClick = true;
+  } else {
+    $("#aim-meter").children("p").remove();
+    aimMeterClick = false;
+    ctxAim.clearRect(0, 0, Constants.CA_WIDTH, Constants.CA_HEIGHT);
+  }
+})
+
+let powerMeterClick = false;
+$("#power-meter").on('click', function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (powerMeterClick === false) {
+    $("<p>The power meter shows you the direction your disk is powered</p>").appendTo("#power-meter");
+
+    ctxPower.beginPath();
+    ctxPower.rect(0, 0, Constants.CP_WIDTH, 75);
+    ctxPower.fillStyle = "#814374";
+    ctxPower.fill();
+    ctxPower.closePath();
+    powerMeterClick = true;
+  } else {
+    $("#power-meter").children("p").remove();
+    powerMeterClick = false;
+    ctxPower.clearRect(0, 0, Constants.CP_WIDTH, Constants.CP_HEIGHT);
+  }
+})
+
+
+
+function playGame () {
+  setInterval(draw, 10);
+}
 // (Constants.ARC_CONST)/2
-setInterval(draw, 10);
