@@ -1,6 +1,6 @@
 # Shuffleboard
 
-[Live Shuffleboard] (https://cassbaltz.github.io/Shuffleboard/)
+[Live Shuffleboard] (https://cassbaltz.github.io/ShuffleGolf/)
 
 Shuffleboard is a modified, single-player shuffleboard game that allows players to test their skill. The game uses JavaScript, CSS, and HTML. Specifically, the animation and gameplay are displayed using HTML5's canvas feature.
 
@@ -14,4 +14,4 @@ The disk slides by having a player click and hold the disk with a mouse pointer,
 
 ## Development
 
-The game uses JavaScript for its functionality, gameplay, and computations with HTML/CSS for presentation. The game is drawn on three different canvas objects: 1) board, 2) directional meter, 3) power meter. Three separate canvas objects made for a better rendering experience and gave the board a more open feel. Logic uses a combination of listeners which capture pointer deltas on repeatedly through quick JavaScript interval calculations. These listeners interacting as desired was probably the most challenging part of developing this game. However, I believe it offers a very realistic user experience for throwing the disk. 
+The game uses JavaScript for its functionality, gameplay, and computations with HTML/CSS for presentation. The game is drawn on three different canvas objects: 1) board, 2) directional meter, 3) power meter. Three separate canvas objects made for a better rendering experience and gave the board a more open feel. Logic uses a combination of listeners which capture pointer deltas on repeatedly through quick JavaScript interval calculations. These listeners interacting as desired was probably the most challenging part of developing this game. However, I believe it offers a very realistic user experience for throwing the disk.
