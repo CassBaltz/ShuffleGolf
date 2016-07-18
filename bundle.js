@@ -375,7 +375,7 @@
 	}
 	
 	function resetBoard () {
-	  
+	
 	}
 	
 	( function ( $ ) {

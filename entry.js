@@ -329,7 +329,7 @@ function endGame() {
 }
 
 function resetBoard () {
-  
+
 }
 
 ( function ( $ ) {
