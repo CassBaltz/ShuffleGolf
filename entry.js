@@ -14,7 +14,7 @@ let xPos = Constants.CANVAS_WIDTH/2;
 let yPos = 15 + ballRadius;
 let yHoleStart = Constants.CANVAS_HEIGHT - (3*Constants.HOLE_RADIUS);
 let holeRadius = Constants.HOLE_RADIUS;
-let strokes = 3;
+let strokes;
 let initialPower = 0;
 let deltX = 0;
 let deltY = 0;
@@ -23,6 +23,7 @@ let mouseX, ballX, ballY, mouseY;
 let masterRadians, masterPower;
 let obstArray = [];
 let level = 1;
+let remainingTurns;
 window.mouseX
 window.mouseY
 
@@ -72,9 +73,11 @@ function strikeBall(xEnd, yEnd) {
   } else if (tot > 150) {
     initialPower = 150;
     strokes --;
+    drawStats();
   } else {
     initialPower = tot;
     strokes --;
+    drawStats();
   }
 
   deltX = (Math.cos(masterRadians));
@@ -132,7 +135,6 @@ function draw() {
   ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
   drawHole();
   drawBall();
-  drawScore();
   if (obstNotBuilt) {
     buildObstacles(level);
   }
@@ -168,6 +170,15 @@ function drawObstacles () {
     ctx.fill();
     ctx.closePath
   }
+}
+
+function drawStats() {
+  $("#level").empty();
+  $("#remaining-throws").empty();
+  $("#remaining-turns").empty();
+  $(`<p>Level: ${level}</p>`).appendTo("#level");
+  $(`<p>Remaining Throws: ${strokes}</p>`).appendTo("#remaining-throws");
+  $(`<p>Remaining Turns: ${remainingTurns}</p>`).appendTo("#remaining-turns");
 }
 
 function drawBall() {
@@ -300,7 +311,7 @@ function alertWinner() {
   obstArray = [];
   strokes = 3;
   level ++;
-  window.alert("Congrats, you won.")
+  drawStats();
 }
 
 function endGame() {
@@ -310,7 +321,15 @@ function endGame() {
   obstArray = [];
   strokes = 3;
   initialPower = 0;
-  window.alert("Sorry, try again.")
+  remainingTurns --;
+  drawStats();
+  if (remainingTurns < 1) {
+    playGame();
+  }
+}
+
+function resetBoard () {
+  
 }
 
 ( function ( $ ) {
@@ -320,17 +339,50 @@ function endGame() {
   $( "#about" ).on( 'click', function (e) {
     e.preventDefault();
     e.stopPropagation();
+    resetBoard();
     controller.open( 'id-1' );
   } );
 
-  $("#close-sidebar").on('click', function (e) {
+  $("#close").on('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
     controller.close( 'id-1');
   });
 
+  $( "#instructions" ).on( 'click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      controller.toggle( 'id-2' );
+    } );
+
+  $( "#play" ).on( 'click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    controller.open( 'id-3');
+    playGame();
+  } );
+
 
 } ) ( jQuery );
+
+// ( function ( $ ) {
+//   // Initialize Slidebars
+//   var controller1 = new slidebars();
+//   controller1.init();
+//
+//   $( "#instructions" ).on( 'click', function (e) {
+//     e.preventDefault();
+//     e.stopPropagation();
+//     controller1.open( 'id-2' );
+//   } );
+//
+//   $("#close-sidebar2").on('click', function (e) {
+//     e.preventDefault();
+//     e.stopPropagation();
+//     controller1.close( 'id-2');
+//   });
+//
+// } ) ( jQuery );
 
 let diskClick = false;
 $("#disk").on('click', function (e) {
@@ -424,6 +476,11 @@ $("#power-meter").on('click', function (e) {
 
 
 function playGame () {
+  level = 1;
+  remainingTurns = 3;
+  strokes = 3;
+  drawStats();
+
   setInterval(draw, 10);
 }
 // (Constants.ARC_CONST)/2
