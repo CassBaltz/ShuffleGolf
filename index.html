@@ -1,11 +1,13 @@
 <html>
     <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="Slidebars-2.0.2/dist/slidebars.css">
-        <link rel="stylesheet" type="text/css" href="game.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+      <title>Shuffle Golf</title>
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="Slidebars-2.0.2/dist/slidebars.css">
+      <link rel="stylesheet" type="text/css" href="game.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <link href='https://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
+      <link rel="icon" href="favicon.ico" type="image/x-icon" />
     </head>
 
     <body>
@@ -20,43 +22,57 @@
         </aside>
 
         <div class="canvas-items">
-          <canvas id="canvasBoard" width="600" height="600"></canvas>
           <div class="shooting-info">
             <canvas id="canvasPower" width="100" height="300"></canvas>
             <canvas id="canvasAim" width="150" height="150"></canvas>
+          </div>
+          <canvas id="canvasBoard" width="600" height="600">
+          </canvas>
+          <div id="score-stats" class="hidden">
+            <h3 id="level"></h3>
+            <h3 id="throws"></h3>
+            <h3 id="turns"></h3>
           </div>
         </div>
 
       </div>
 
       <div id="instructions-comp" off-canvas="id-2 right overlay">
-        <h1 class="slidebar">Instructions</h1>
+        <div class="instructions-header">
+          <h1 class="instructions">Instructions</h1>
+          <h1 id="close-instructions" class="instructions">X</h1>
+        </div>
         <h3 class="instructions">Overview</h3>
-        <p>
+        <p class="instructions">
           Your goal is to advance as far as possible within a series. A series consists of three fails. A fail happens when you throw your disk off the board, run your disk into an obstacle, or you do not get your disk to come to rest within the target area in three or less throws.  Each throw is taken from the resting point of the last throw. If you get the disc in the target, you will advance to another round with more obstacles. If you are able to get your disc in the target area within less than the three throws, you will be awarded another fail in your series. You will receive one point for advancing each level.
         </p>
         <h3 class="instructions">How to Throw a Disk</h3>
-        <p>
+        <p class="instructions">
           You can throw a disc by clicking on the disk, dragging the mouse back to create power and direction, and then releasing the mouse button to send the disk sliding across the board.
         </p>
       </div>
 
-      <div id="game-stats" off-canvas="id-3 right overlay">
-        <h1 class="slidebar">Stats!</h1>
-        <h3 id="level" class="instructions"></h3>
-        <h3 id="remaining-throws" class="instructions"></h3>
-        <h3 id="remaining-turns" class="instructions"></h3>
+      <div off-canvas="id-1 right push">
+        <h3 class="right" id="close">X</h3>
+        <h1 class="slidebar">Components</h1>
+        <div id="disk">
+          <h6 class="items" >Disk</h6>
+        </div>
+        <div id="target">
+          <h6 class="items">Target</h6>
+        </div>
+        <div id="obstacle">
+          <h6 class="items">Obstacle</h6>
+        </div>
+        <div id="aim-meter">
+          <h6 class="items">Aim Meter</h6>
+        </div>
+        <div id="power-meter">
+          <h6 class="items">Power Meter</h6>
+        </div>
       </div>
 
-      <div off-canvas="id-1 right push">
-        <h3 class="right" id="close">Close</h3>
-        <h1 class="slidebar">Components</h1>
-        <h3>Click to learn more about each piece</h3>
-        <h6 class="items" id="disk">Disk</h6>
-        <h6 class="items" id="target">Target</h6>
-        <h6 class="items" id="obstacle">Obstacle</h6>
-        <h6 class="items" id="aim-meter">Aim Meter</h6>
-        <h6 class="items" id="power-meter">Power Meter</h6>
+      <div id="feedback-banner" off-canvas="id-4 top overlay">
       </div>
     </body>
     <script type="text/javascript" src="bundle.js" charset="utf-8"></script>

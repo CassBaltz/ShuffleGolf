@@ -24,6 +24,7 @@ let masterRadians, masterPower;
 let obstArray = [];
 let level = 1;
 let remainingTurns;
+let text;
 window.mouseX
 window.mouseY
 
@@ -44,14 +45,9 @@ function filterClick(e) {
     onSwing = true;
     swing(ballX, ballY)
   }
-
-  console.log("miss");
 };
 
 function strikeBall(xEnd, yEnd) {
-  console.log("striking ball");
-  console.log(ballX);
-  console.log(ballY);
   ctxPower.clearRect(0, 0, Constants.CP_WIDTH, Constants.CP_HEIGHT);
   ctxAim.clearRect(0, 0, Constants.CA_WIDTH, Constants.CA_HEIGHT);
   let xDif = (xEnd > ballX) ? (xEnd - ballX) : (ballX - xEnd);
@@ -73,10 +69,12 @@ function strikeBall(xEnd, yEnd) {
   } else if (tot > 150) {
     initialPower = 150;
     strokes --;
+    window.draw = setInterval(draw, 10);
     drawStats();
   } else {
     initialPower = tot;
     strokes --;
+    window.draw = setInterval(draw, 10);
     drawStats();
   }
 
@@ -110,7 +108,11 @@ function buildObstacles (level) {
   let status = true;
   i = 0;
   while (i < (level + 3)) {
-    x = Math.floor(Math.random() * ((Constants.CANVAS_WIDTH - (Constants.OBS_RAD)) - (Constants.OBS_RAD)) + (Constants.OBS_RAD));
+    if (i === 0) {
+      x = Constants.CANVAS_WIDTH / 2;
+    } else {
+      x = Math.floor(Math.random() * ((Constants.CANVAS_WIDTH - (Constants.OBS_RAD)) - (Constants.OBS_RAD)) + (Constants.OBS_RAD));
+    }
     y = Math.floor(Math.random() * ((Constants.CANVAS_HEIGHT - 100) - 75) + 75);
     for (let j = 0; j < obstArray.length; j++ ) {
       status = true;
@@ -135,26 +137,28 @@ function draw() {
   ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
   drawHole();
   drawBall();
+  console.log("drawing")
   if (obstNotBuilt) {
     buildObstacles(level);
   }
   drawObstacles();
-  if (initialPower > .4) {
-    xPos = xPos + (deltX * initialPower/10);
-    yPos = yPos + (deltY * initialPower/10);
-    initialPower *= .97;
+  if (initialPower > .2) {
+    xPos = xPos + (deltX * initialPower/25);
+    yPos = yPos + (deltY * initialPower/25);
+    initialPower *= .99;
     checkStatus();
   } else {
     let holeX = xPos - (Constants.CANVAS_WIDTH/2);
     let holeY = yPos - yHoleStart;
     let distance = Math.sqrt((holeX * holeX) + (holeY * holeY));
+
     if (distance < (Constants.HOLE_RADIUS - ballRadius/2)) {
       alertWinner();
     }
-
     if (strokes === 0) {
       endGame();
     }
+    clearInterval(window.draw);
   }
 
 }
@@ -174,11 +178,11 @@ function drawObstacles () {
 
 function drawStats() {
   $("#level").empty();
-  $("#remaining-throws").empty();
-  $("#remaining-turns").empty();
-  $(`<p>Level: ${level}</p>`).appendTo("#level");
-  $(`<p>Remaining Throws: ${strokes}</p>`).appendTo("#remaining-throws");
-  $(`<p>Remaining Turns: ${remainingTurns}</p>`).appendTo("#remaining-turns");
+  $("#throws").empty();
+  $("#turns").empty();
+  $("#level").append(`level: ${level}`);
+  $("#throws").append(`throws: ${strokes}`);
+  $("#turns").append(`turns: ${remainingTurns}`);
 }
 
 function drawBall() {
@@ -192,15 +196,15 @@ function drawBall() {
 };
 
 function checkStatus() {
-  if (xPos < 0) {
+  if ((xPos - ballRadius) < 0) {
     endGame();
   }
 
-  if (xPos > Constants.CANVAS_WIDTH) {
+  if ((xPos + ballRadius) > Constants.CANVAS_WIDTH) {
     endGame();
   }
 
-  if (yPos > Constants.CANVAS_HEIGHT) {
+  if ((yPos + ballRadius) > Constants.CANVAS_HEIGHT) {
     endGame();
   }
 
@@ -269,7 +273,7 @@ function getRad(xPos, yPos, xEnd, yEnd) {
   let yVal = yPos - yEnd;
   let xDif = Math.abs(xEnd - xPos);
   let yDif = Math.abs(yEnd - yPos);
-  let slopeConst = (yDif/(xDif + .001))
+  let slopeConst = (yDif/(xDif + .001));
   // console.log(slopeConst)
   if (slopeConst <= 1) {
     slope = (1.570796 * slopeConst) / 2;
@@ -301,7 +305,7 @@ function getRad(xPos, yPos, xEnd, yEnd) {
     // console.log(`4`)
   }
   masterRadians = slope;
-  return slope
+  return slope;
 }
 
 function alertWinner() {
@@ -309,9 +313,17 @@ function alertWinner() {
   yPos = 15 + ballRadius;
   obstNotBuilt = true;
   obstArray = [];
-  strokes = 3;
+
   level ++;
+  remainingTurns = remainingTurns + strokes
+  strokes = 3;
+  $("#feedback-banner").empty();
+  $("#feedback-banner").removeClass("red");
+  $("#feedback-banner").append("<h1>Score!</h1>");
+  $("#feedback-banner").addClass("green");
+  showFeedback(1000);
   drawStats();
+  draw();
 }
 
 function endGame() {
@@ -323,47 +335,80 @@ function endGame() {
   initialPower = 0;
   remainingTurns --;
   drawStats();
+  draw();
   if (remainingTurns < 1) {
+    $("#feedback-banner").empty();
+    $("#feedback-banner").removeClass("green");
+    $("#feedback-banner").append("<h1>Game Over</h1>");
+    $("#feedback-banner").addClass("red");
+    showFeedback(2000);
     playGame();
+  } else {
+    $("#feedback-banner").empty();
+    $("#feedback-banner").removeClass("green");
+    $("#feedback-banner").append("<h1>Miss</h1>");
+    $("#feedback-banner").addClass("red");
+    showFeedback(1000);
   }
 }
 
-function resetBoard () {
-
-}
-
-( function ( $ ) {
   // Initialize Slidebars
-  var controller = new slidebars();
+  let controller = new slidebars();
   controller.init();
   $( "#about" ).on( 'click', function (e) {
     e.preventDefault();
     e.stopPropagation();
-    resetBoard();
+    clearInterval(window.draw);
+    clearItems();
+    clearClass(e);
+    $("#score-stats").addClass("hidden");
+    $(e.target).toggleClass('clicked');
     controller.open( 'id-1' );
   } );
 
   $("#close").on('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
+    clearItems();
+    $("#about").toggleClass('clicked')
     controller.close( 'id-1');
   });
 
   $( "#instructions" ).on( 'click', function (e) {
       e.preventDefault();
       e.stopPropagation();
+      clearClass(e);
+      $(e.target).toggleClass('clicked');
       controller.toggle( 'id-2' );
     } );
+
+  $("#close-instructions").on( 'click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    controller.toggle( 'id-2');
+    $("#instructions").toggleClass('clicked');
+  });
+
+  function showFeedback (speed) {
+    controller.toggle('id-4');
+    setTimeout(function() {
+      controller.toggle('id-4')
+    }, speed);
+  }
 
   $( "#play" ).on( 'click', function (e) {
     e.preventDefault();
     e.stopPropagation();
-    controller.open( 'id-3');
+    clearClass(e);
+    $(e.target).addClass('clicked');
+    $("#score-stats").removeClass('hidden');
     playGame();
   } );
 
+  function clearClass(e) {
+    $(e.target).siblings().removeClass('clicked');
+  }
 
-} ) ( jQuery );
 
 // ( function ( $ ) {
 //   // Initialize Slidebars
@@ -384,93 +429,68 @@ function resetBoard () {
 //
 // } ) ( jQuery );
 
-let diskClick = false;
+function clearItems () {
+  $("#disk").children("p").remove();
+  $("#target").children("p").remove();
+  $("#obstacle").children("p").remove();
+  $("#aim-meter").children("p").remove();
+  $("#power-meter").children("p").remove();
+  ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+  ctxAim.clearRect(0, 0, Constants.CA_WIDTH, Constants.CA_HEIGHT);
+  ctxPower.clearRect(0, 0, Constants.CP_WIDTH, Constants.CP_HEIGHT);
+}
+
+
+
 $("#disk").on('click', function (e) {
   e.preventDefault();
   e.stopPropagation();
-  if (diskClick === false) {
+  clearItems();
     $("<p>The disk is what you throw towards the target by clicking on it and then dragging your mouse back to determine power and speed.</p>").appendTo("#disk");
-    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
     drawBall();
     diskClick = true;
-  } else {
-    $("#disk").children("p").remove();
-    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
-    diskClick= false;
-  }
 })
 
-let targetClick = false;
 $("#target").on('click', function (e) {
   e.preventDefault();
   e.stopPropagation();
-  if (targetClick === false) {
-    $("<p>To advance a round, have your disk rest completely within the target area</p>").appendTo("#target");
-    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
-    drawHole();
-    targetClick = true;
-  } else {
-    $("#target").children("p").remove();
-    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
-    targetClick = false;
-  }
+  clearItems();
+  $("<p>To advance a round, have your disk rest completely within the target area</p>").appendTo("#target");
+  drawHole();
 })
 
-let obstacleClick = false;
 $("#obstacle").on('click', function (e) {
   e.preventDefault();
   e.stopPropagation();
-  if (obstacleClick === false) {
-    $("<p>Your disk cannot touch obstacles, or you will lose a turn.</p>").appendTo("#obstacle");
-    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
-    obstArray = [[Constants.CANVAS_WIDTH/2, Constants.CANVAS_HEIGHT/2]];
-    drawObstacles();
-    obstacleClick = true;
-  } else {
-    $("#obstacle").children("p").remove();
-    ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
-    obstacleClick = false;
-  }
+  clearItems();
+  $("<p>Your disk cannot touch obstacles, or you will lose a turn.</p>").appendTo("#obstacle");
+  obstArray = [[Constants.CANVAS_WIDTH/2, Constants.CANVAS_HEIGHT/2]];
+  drawObstacles();
 })
 
-let aimMeterClick = false;
 $("#aim-meter").on('click', function (e) {
   e.preventDefault();
   e.stopPropagation();
-  if (aimMeterClick === false) {
-    $("<p>The aim meter shows you the direction your disk is aimed</p>").appendTo("#aim-meter");
-
+  clearItems();
+  $("<p>The aim meter shows you the direction your disk is aimed</p>").appendTo("#aim-meter");
     ctxAim.beginPath();
     ctxAim.arc((Constants.CA_WIDTH/2), (Constants.CA_HEIGHT/2), Math.floor(Constants.CA_WIDTH/3), 2.5 - (Constants.ARC_CONST/2), (2.5 + Constants.ARC_CONST));
     ctxAim.lineWidth = 15;
     ctxAim.strokeStyle = "#814374";
     ctxAim.stroke();
-    aimMeterClick = true;
-  } else {
-    $("#aim-meter").children("p").remove();
-    aimMeterClick = false;
-    ctxAim.clearRect(0, 0, Constants.CA_WIDTH, Constants.CA_HEIGHT);
-  }
 })
 
-let powerMeterClick = false;
 $("#power-meter").on('click', function (e) {
   e.preventDefault();
   e.stopPropagation();
-  if (powerMeterClick === false) {
-    $("<p>The power meter shows you the direction your disk is powered</p>").appendTo("#power-meter");
+  clearItems();
+    $("<p class='comp-class'>The power meter shows you the direction your disk is powered</p>").appendTo("#power-meter");
 
     ctxPower.beginPath();
     ctxPower.rect(0, 0, Constants.CP_WIDTH, 75);
     ctxPower.fillStyle = "#814374";
     ctxPower.fill();
     ctxPower.closePath();
-    powerMeterClick = true;
-  } else {
-    $("#power-meter").children("p").remove();
-    powerMeterClick = false;
-    ctxPower.clearRect(0, 0, Constants.CP_WIDTH, Constants.CP_HEIGHT);
-  }
 })
 
 
@@ -479,8 +499,16 @@ function playGame () {
   level = 1;
   remainingTurns = 3;
   strokes = 3;
-  drawStats();
+  xPos = Constants.CANVAS_WIDTH/2;
+  yPos = 15 + ballRadius;
+  initialPower = 0;
+  deltX = 0;
+  deltY = 0;
+  onSwing = false;
+  obstNotBuilt = true
+  obstArray = [];
 
-  setInterval(draw, 10);
+  drawStats();
+  draw();
 }
 // (Constants.ARC_CONST)/2
