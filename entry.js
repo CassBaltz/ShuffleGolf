@@ -232,6 +232,7 @@ function drawScore () {
 function drawHole() {
   ctx.beginPath();
   ctx.arc(Constants.CANVAS_WIDTH/2, yHoleStart, holeRadius, 0, Math.PI*2);
+
   ctx.fillStyle = "#F2F2F2";
   // ctx.lineWidth = 5;
   ctx.fill();

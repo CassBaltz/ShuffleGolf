@@ -278,6 +278,7 @@
 	function drawHole() {
 	  ctx.beginPath();
 	  ctx.arc(Constants.CANVAS_WIDTH/2, yHoleStart, holeRadius, 0, Math.PI*2);
+	
 	  ctx.fillStyle = "#F2F2F2";
 	  // ctx.lineWidth = 5;
 	  ctx.fill();
@@ -492,7 +493,7 @@
 	  e.preventDefault();
 	  e.stopPropagation();
 	  clearItems();
-	    $("<p>The disk is what you throw towards the target by clicking on it and then dragging your mouse back to determine power and speed.</p>").appendTo("#disk");
+	    $("<p>The disk is what you throw towards the target by holding the mouse button down then dragging your mouse back to determine power and speed. Release the mouse button to send your disk across the board.</p>").appendTo("#disk");
 	    drawBall();
 	    diskClick = true;
 	})
@@ -501,7 +502,7 @@
 	  e.preventDefault();
 	  e.stopPropagation();
 	  clearItems();
-	  $("<p>To advance a round, have your disk rest completely within the target area</p>").appendTo("#target");
+	  $("<p>To advance a round, have your disk come to rest within the target area (over half the disk must be inside)</p>").appendTo("#target");
 	  drawHole();
 	})
 	
@@ -509,7 +510,7 @@
 	  e.preventDefault();
 	  e.stopPropagation();
 	  clearItems();
-	  $("<p>Your disk cannot touch obstacles, or you will lose a turn.</p>").appendTo("#obstacle");
+	  $("<p>Your disk cannot touch obstacles or you will lose a turn.</p>").appendTo("#obstacle");
 	  obstArray = [[Constants.CANVAS_WIDTH/2, Constants.CANVAS_HEIGHT/2]];
 	  drawObstacles();
 	})
@@ -518,7 +519,7 @@
 	  e.preventDefault();
 	  e.stopPropagation();
 	  clearItems();
-	  $("<p>The aim meter shows you the direction your disk is aimed</p>").appendTo("#aim-meter");
+	  $("<p>The aim meter shows you the direction your disk is currently aimed</p>").appendTo("#aim-meter");
 	    ctxAim.beginPath();
 	    ctxAim.arc((Constants.CA_WIDTH/2), (Constants.CA_HEIGHT/2), Math.floor(Constants.CA_WIDTH/3), 2.5 - (Constants.ARC_CONST/2), (2.5 + Constants.ARC_CONST));
 	    ctxAim.lineWidth = 15;
@@ -530,7 +531,7 @@
 	  e.preventDefault();
 	  e.stopPropagation();
 	  clearItems();
-	    $("<p class='comp-class'>The power meter shows you the direction your disk is powered</p>").appendTo("#power-meter");
+	    $("<p class='comp-class'>The power meter shows you the speed your disk is powered</p>").appendTo("#power-meter");
 	
 	    ctxPower.beginPath();
 	    ctxPower.rect(0, 0, Constants.CP_WIDTH, 75);
@@ -568,7 +569,7 @@
 	  CANVAS_WIDTH: 600,
 	  CANVAS_HEIGHT: 600,
 	  BALL_RADIUS: 6,
-	  HOLE_RADIUS: 16,
+	  HOLE_RADIUS: 20,
 	  CP_WIDTH: 100,
 	  CP_HEIGHT: 300,
 	  CA_WIDTH: 150,
