@@ -6,6 +6,11 @@ body {
   margin: 0;
 }
 
+#demo-gif-image {
+width: 400px;
+padding: 30px
+}
+
 div#main-canvas {
   margin-left: 0;
   margin-right: 0;
