@@ -1,8 +1,12 @@
 # ShuffleGolf
 
-[Live ShuffleGolf] (https://cassbaltz.github.io/ShuffleGolf/)
+[ShuffleGolf Link] (https://cassbaltz.github.io/ShuffleGolf/)
 
 ShuffleGolf is a modified, single-player shuffleGolf game that allows players to test their skill. The game uses JavaScript, CSS, and HTML. Specifically, the animation and gameplay are displayed using HTML5's canvas feature.
+
+## Demo
+
+[ShuffleGolf Demo] (http://res.cloudinary.com/cassbaltz/image/upload/v1470430105/MichStar/ShuffleGolfDemo_bcjn43.gif)
 
 ## Rules
 
