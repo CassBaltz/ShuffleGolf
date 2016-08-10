@@ -1,5 +1,5 @@
 const Constants = require('./constants');
-const slidebars = require('./Slidebars-2.0.2/dist/slidebars')
+const slidebars = require('./Slidebars-2.0.2/dist/slidebars');
 
 let canvasBoard = document.getElementById("canvasBoard");
 let ctx = canvasBoard.getContext("2d");

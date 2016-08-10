@@ -46,14 +46,14 @@
 
 	const Constants = __webpack_require__(1);
 	const slidebars = __webpack_require__(2);
-
+	
 	let canvasBoard = document.getElementById("canvasBoard");
 	let ctx = canvasBoard.getContext("2d");
 	let canvasPower = document.getElementById("canvasPower");
 	let ctxPower = canvasPower.getContext("2d");
 	let canvasAim = document.getElementById("canvasAim");
 	let ctxAim = canvasAim.getContext("2d");
-
+	
 	let obstNotBuilt = true;
 	let ballRadius = Constants.BALL_RADIUS;
 	let xPos = Constants.CANVAS_WIDTH/2;
@@ -73,15 +73,15 @@
 	let text;
 	window.mouseX
 	window.mouseY
-
+	
 	canvasBoard.addEventListener("mousedown", (function(e) {
 	    filterClick(e);
 	}));
-
+	
 	window.addEventListener("mousemove", (function(e) {
 	  updatePos(e);
 	}));
-
+	
 	function filterClick(e) {
 	  e.preventDefault();
 	  if (((xPos - ballRadius) <= e.offsetX && e.offsetX <= (xPos + ballRadius)) && ((yPos - ballRadius) <= e.offsetY && e.offsetY <= (yPos + ballRadius))) {
@@ -92,7 +92,7 @@
 	    swing(ballX, ballY)
 	  }
 	};
-
+	
 	function strikeBall(xEnd, yEnd) {
 	  ctxPower.clearRect(0, 0, Constants.CP_WIDTH, Constants.CP_HEIGHT);
 	  ctxAim.clearRect(0, 0, Constants.CA_WIDTH, Constants.CA_HEIGHT);
@@ -100,15 +100,15 @@
 	  let yDif = (yEnd > ballY) ? (yEnd - ballY) : (ballY - yEnd);
 	  let pyth = (xDif * xDif) + (yDif * yDif);
 	  let tot = Math.floor(Math.sqrt(pyth));
-
-
+	
+	
 	  console.log(`masterPower= ${masterPower}`);
 	  console.log(`masterRadians= ${Math.tan(masterRadians)}`);
 	  // console.log(`yPos=${yPos}`);
 	  // console.log(`yEnd=${yEnd}`);
 	  // console.log(tot)
 	  // console.log(xDif/yDif);
-
+	
 	  if (tot < 5) {
 	    console.log("too small")
 	    return;
@@ -123,20 +123,20 @@
 	    window.draw = setInterval(draw, 10);
 	    drawStats();
 	  }
-
+	
 	  deltX = (Math.cos(masterRadians));
 	  deltY = (Math.sin(masterRadians));
-
+	
 	  // console.log(tot)
 	}
-
+	
 	function updatePos(e) {
 	  window.mouseX = e.screenX;
 	  window.mouseY = e.screenY;
 	}
-
+	
 	function swing(xInit, yInit) {
-
+	
 	  this.addEventListener("mouseup", (function() {
 	    clearInterval(window.drawHitDetailInterval);
 	    if (onSwing) {
@@ -145,10 +145,10 @@
 	    }
 	    onSwing = false;
 	  }));
-
+	
 	  window.drawHitDetailInterval = setInterval(function() {drawHitDetails(xInit, yInit, window.mouseX, window.mouseY)}, 5);
 	};
-
+	
 	function buildObstacles (level) {
 	  let i, x, y, dx, dy, distance;
 	  let status = true;
@@ -174,11 +174,11 @@
 	      obstArray.push([x, y]);
 	      i++;
 	    }
-
+	
 	  }
 	  obstNotBuilt = false;
 	}
-
+	
 	function draw() {
 	  ctx.clearRect(0, 0, Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
 	  drawHole();
@@ -197,7 +197,7 @@
 	    let holeX = xPos - (Constants.CANVAS_WIDTH/2);
 	    let holeY = yPos - yHoleStart;
 	    let distance = Math.sqrt((holeX * holeX) + (holeY * holeY));
-
+	
 	    if (distance < (Constants.HOLE_RADIUS - ballRadius/2)) {
 	      alertWinner();
 	    }
@@ -206,9 +206,9 @@
 	    }
 	    clearInterval(window.draw);
 	  }
-
+	
 	}
-
+	
 	function drawObstacles () {
 	  let x, y, i;
 	  for (i = 0; i < obstArray.length; i++) {
@@ -221,7 +221,7 @@
 	    ctx.closePath
 	  }
 	}
-
+	
 	function drawStats() {
 	  $("#level").empty();
 	  $("#throws").empty();
@@ -230,7 +230,7 @@
 	  $("#throws").append(`throws: ${strokes}`);
 	  $("#turns").append(`turns: ${remainingTurns}`);
 	}
-
+	
 	function drawBall() {
 	  ctx.beginPath();
 	  ctx.arc(xPos, yPos, ballRadius, 0, Math.PI*2);
@@ -240,50 +240,50 @@
 	  // setDirection();
 	  // setInitialSpeed();
 	};
-
+	
 	function checkStatus() {
 	  if ((xPos - ballRadius) < 0) {
 	    endGame();
 	  }
-
+	
 	  if ((xPos + ballRadius) > Constants.CANVAS_WIDTH) {
 	    endGame();
 	  }
-
+	
 	  if ((yPos + ballRadius) > Constants.CANVAS_HEIGHT) {
 	    endGame();
 	  }
-
+	
 	  for (let i = 0; i < obstArray.length; i++ ) {
 	    var circle1 = {radius: Constants.OBS_RAD, x: obstArray[i][0], y: obstArray[i][1]};
 	    var circle2 = {radius: ballRadius, x: xPos, y: yPos};
-
+	
 	    var dx = circle1.x - circle2.x;
 	    var dy = circle1.y - circle2.y;
 	    var distance = Math.sqrt(dx * dx + dy * dy);
-
+	
 	    if (distance < circle1.radius + circle2.radius) {
 	        endGame();
 	    }
 	  }
 	}
-
-
+	
+	
 	function drawScore () {
 	  ctx.font = "20px Georgia";
 	  ctx.fillText(`strokes: ${strokes}`, Constants.CANVAS_WIDTH - 100, 30);
 	}
-
-
+	
+	
 	function drawHole() {
 	  ctx.beginPath();
 	  ctx.arc(Constants.CANVAS_WIDTH/2, yHoleStart, holeRadius, 0, Math.PI*2);
-
+	
 	  ctx.fillStyle = "#F2F2F2";
 	  // ctx.lineWidth = 5;
 	  ctx.fill();
 	}
-
+	
 	function drawHitDetails(xPos, yPos, xEnd, yEnd) {
 	  // if (xEnd === undefined || yEnd === undefined) {
 	  //   xEnd = xPos;
@@ -295,25 +295,25 @@
 	  let yDif = (yEnd > yPos) ? (yEnd - yPos) : (yPos - yEnd);
 	  let pyth = (xDif * xDif) + (yDif * yDif);
 	  let tot = Math.floor(Math.sqrt(pyth));
-
+	
 	  masterPower = tot;
-
+	
 	  let startRad = getRad(xPos, yPos, xEnd, yEnd);
 	  // console.log(startRad);
-
+	
 	  ctxPower.beginPath();
 	  ctxPower.rect(0, 0, Constants.CP_WIDTH, (tot * 2));
 	  ctxPower.fillStyle = "#814374";
 	  ctxPower.fill();
 	  ctxPower.closePath();
-
+	
 	  ctxAim.beginPath();
 	  ctxAim.arc((Constants.CA_WIDTH/2), (Constants.CA_HEIGHT/2), Math.floor(Constants.CA_WIDTH/3), startRad - (Constants.ARC_CONST/2), (startRad + Constants.ARC_CONST));
 	  ctxAim.lineWidth = 15;
 	  ctxAim.strokeStyle = "#814374";
 	  ctxAim.stroke();
 	}
-
+	
 	function getRad(xPos, yPos, xEnd, yEnd) {
 	  let slope, begin;
 	  let xVal = xEnd - xPos;
@@ -330,7 +330,7 @@
 	    begin = 1;
 	  }
 	  // console.log(`slope start=${slope}`);
-
+	
 	  if ((xVal > 0) && (yVal > 0)) {
 	    slope = 3.141592 - slope;
 	    // console.log(`slope=${slope}`)
@@ -354,13 +354,13 @@
 	  masterRadians = slope;
 	  return slope;
 	}
-
+	
 	function alertWinner() {
 	  xPos = Constants.CANVAS_WIDTH/2;
 	  yPos = 15 + ballRadius;
 	  obstNotBuilt = true;
 	  obstArray = [];
-
+	
 	  level ++;
 	  remainingTurns = remainingTurns + strokes
 	  strokes = 3;
@@ -372,7 +372,7 @@
 	  drawStats();
 	  draw();
 	}
-
+	
 	function endGame() {
 	  xPos = Constants.CANVAS_WIDTH/2;
 	  yPos = 15 + ballRadius;
@@ -398,7 +398,7 @@
 	    showFeedback(1000);
 	  }
 	}
-
+	
 	  // Initialize Slidebars
 	  let controller = new slidebars();
 	  controller.init();
@@ -412,7 +412,7 @@
 	    $(e.target).toggleClass('clicked');
 	    controller.open( 'id-1' );
 	  } );
-
+	
 	  $("#close").on('click', function (e) {
 	    e.preventDefault();
 	    e.stopPropagation();
@@ -420,7 +420,7 @@
 	    $("#about").toggleClass('clicked')
 	    controller.close( 'id-1');
 	  });
-
+	
 	  $( "#instructions" ).on( 'click', function (e) {
 	      e.preventDefault();
 	      e.stopPropagation();
@@ -428,21 +428,21 @@
 	      $(e.target).toggleClass('clicked');
 	      controller.toggle( 'id-2' );
 	    } );
-
+	
 	  $("#close-instructions").on( 'click', function(e) {
 	    e.preventDefault();
 	    e.stopPropagation();
 	    controller.toggle( 'id-2');
 	    $("#instructions").toggleClass('clicked');
 	  });
-
+	
 	  function showFeedback (speed) {
 	    controller.toggle('id-4');
 	    setTimeout(function() {
 	      controller.toggle('id-4')
 	    }, speed);
 	  }
-
+	
 	  $( "#play" ).on( 'click', function (e) {
 	    e.preventDefault();
 	    e.stopPropagation();
@@ -451,12 +451,12 @@
 	    $("#score-stats").removeClass('hidden');
 	    playGame();
 	  } );
-
+	
 	  function clearClass(e) {
 	    $(e.target).siblings().removeClass('clicked');
 	  }
-
-
+	
+	
 	// ( function ( $ ) {
 	//   // Initialize Slidebars
 	//   var controller1 = new slidebars();
@@ -475,7 +475,7 @@
 	//   });
 	//
 	// } ) ( jQuery );
-
+	
 	function clearItems () {
 	  $("#disk").children("p").remove();
 	  $("#target").children("p").remove();
@@ -486,9 +486,9 @@
 	  ctxAim.clearRect(0, 0, Constants.CA_WIDTH, Constants.CA_HEIGHT);
 	  ctxPower.clearRect(0, 0, Constants.CP_WIDTH, Constants.CP_HEIGHT);
 	}
-
-
-
+	
+	
+	
 	$("#disk").on('click', function (e) {
 	  e.preventDefault();
 	  e.stopPropagation();
@@ -497,7 +497,7 @@
 	    drawBall();
 	    diskClick = true;
 	})
-
+	
 	$("#target").on('click', function (e) {
 	  e.preventDefault();
 	  e.stopPropagation();
@@ -505,7 +505,7 @@
 	  $("<p>To advance a round, have your disk come to rest within the target area (over half the disk must be inside)</p>").appendTo("#target");
 	  drawHole();
 	})
-
+	
 	$("#obstacle").on('click', function (e) {
 	  e.preventDefault();
 	  e.stopPropagation();
@@ -514,7 +514,7 @@
 	  obstArray = [[Constants.CANVAS_WIDTH/2, Constants.CANVAS_HEIGHT/2]];
 	  drawObstacles();
 	})
-
+	
 	$("#aim-meter").on('click', function (e) {
 	  e.preventDefault();
 	  e.stopPropagation();
@@ -526,22 +526,22 @@
 	    ctxAim.strokeStyle = "#814374";
 	    ctxAim.stroke();
 	})
-
+	
 	$("#power-meter").on('click', function (e) {
 	  e.preventDefault();
 	  e.stopPropagation();
 	  clearItems();
 	    $("<p class='comp-class'>The power meter shows you the speed your disk is powered</p>").appendTo("#power-meter");
-
+	
 	    ctxPower.beginPath();
 	    ctxPower.rect(0, 0, Constants.CP_WIDTH, 75);
 	    ctxPower.fillStyle = "#814374";
 	    ctxPower.fill();
 	    ctxPower.closePath();
 	})
-
-
-
+	
+	
+	
 	function playGame () {
 	  level = 1;
 	  remainingTurns = 3;
@@ -554,7 +554,7 @@
 	  onSwing = false;
 	  obstNotBuilt = true
 	  obstArray = [];
-
+	
 	  drawStats();
 	  draw();
 	}
@@ -592,44 +592,44 @@
 	 * License: MIT
 	 * License url: http://www.adchsm.com/slidebars/license/
 	 */
-
+	
 	var slidebars = function () {
-
+	
 		/**
 		 * Setup
 		 */
-
+	
 		// Cache all canvas elements
 		var canvas = $( '[canvas]' ),
-
+	
 		// Object of Slidebars
 		offCanvas = {},
-
+	
 		// Variables, permitted sides and styles
 		init = false,
 		registered = false,
 		sides = [ 'top', 'right', 'bottom', 'left' ],
 		styles = [ 'reveal', 'push', 'overlay', 'shift' ],
-
+	
 		/**
 		 * Get Animation Properties
 		 */
-
+	
 		getAnimationProperties = function ( id ) {
 			// Variables
 			var elements = $(),
 			amount = '0px, 0px',
 			duration = parseFloat( offCanvas[ id ].element.css( 'transitionDuration' ), 10 ) * 1000;
-
+	
 			// Elements to animate
 			if ( offCanvas[ id ].style === 'reveal' || offCanvas[ id ].style === 'push' || offCanvas[ id ].style === 'shift' ) {
 				elements = elements.add( canvas );
 			}
-
+	
 			if ( offCanvas[ id ].style === 'push' || offCanvas[ id ].style === 'overlay' || offCanvas[ id ].style === 'shift' ) {
 				elements = elements.add( offCanvas[ id ].element );
 			}
-
+	
 			// Amount to animate
 			if ( offCanvas[ id ].active ) {
 				if ( offCanvas[ id ].side === 'top' ) {
@@ -642,21 +642,21 @@
 					amount = offCanvas[ id ].element.css( 'width' ) + ', 0px';
 				}
 			}
-
+	
 			// Return animation properties
 			return { 'elements': elements, 'amount': amount, 'duration': duration };
 		},
-
+	
 		/**
 		 * Slidebars Registration
 		 */
-
+	
 		registerSlidebar = function ( id, side, style, element ) {
 			// Check if Slidebar is registered
 			if ( isRegisteredSlidebar( id ) ) {
 				throw "Error registering Slidebar, a Slidebar with id '" + id + "' already exists.";
 			}
-
+	
 			// Register the Slidebar
 			offCanvas[ id ] = {
 				'id': id,
@@ -666,7 +666,7 @@
 				'active': false
 			};
 		},
-
+	
 		isRegisteredSlidebar = function ( id ) {
 			// Return if Slidebar is registered
 			if ( offCanvas.hasOwnProperty( id ) ) {
@@ -675,71 +675,71 @@
 				return false;
 			}
 		};
-
+	
 		/**
 		 * Initialization
 		 */
-
+	
 		this.init = function ( callback ) {
 			// Check if Slidebars has been initialized
 			if ( init ) {
 				throw "Slidebars has already been initialized.";
 			}
-
+	
 			// Loop through and register Slidebars
 			if ( ! registered ) {
 				$( '[off-canvas]' ).each( function () {
 					// Get Slidebar parameters
 					var parameters = $( this ).attr( 'off-canvas' ).split( ' ', 3 );
-
+	
 					// Make sure a valid id, side and style are specified
 					if ( ! parameters || ! parameters[ 0 ] || sides.indexOf( parameters[ 1 ] ) === -1 || styles.indexOf( parameters[ 2 ] ) === -1 ) {
 						throw "Error registering Slidebar, please specifiy a valid id, side and style'.";
 					}
-
+	
 					// Register Slidebar
 					registerSlidebar( parameters[ 0 ], parameters[ 1 ], parameters[ 2 ], $( this ) );
 				} );
-
+	
 				// Set registered variable
 				registered = true;
 			}
-
+	
 			// Set initialized variable
 			init = true;
-
+	
 			// Set CSS
 			this.css();
-
+	
 			// Trigger event
 			$( events ).trigger( 'init' );
-
+	
 			// Run callback
 			if ( typeof callback === 'function' ) {
 				callback();
 			}
 		};
-
+	
 		this.exit = function ( callback ) {
 			// Check if Slidebars has been initialized
 			if ( ! init ) {
 				throw "Slidebars hasn't been initialized.";
 			}
-
+	
 			// Exit
 			var exit = function () {
 				// Set init variable
 				init = false;
-
+	
 				// Trigger event
 				$( events ).trigger( 'exit' );
-
+	
 				// Run callback
 				if ( typeof callback === 'function' ) {
 					callback();
 				}
 			};
-
+	
 			// Call exit, close open Slidebar if active
 			if ( this.getActiveSlidebar() ) {
 				this.close( exit );
@@ -747,98 +747,98 @@
 				exit();
 			}
 		};
-
+	
 		/**
 		 * CSS
 		 */
-
+	
 		this.css = function ( callback ) {
 			// Check if Slidebars has been initialized
 			if ( ! init ) {
 				throw "Slidebars hasn't been initialized.";
 			}
-
+	
 			// Loop through Slidebars to set negative margins
 			for ( var id in offCanvas ) {
 				// Check if Slidebar is registered
 				if ( isRegisteredSlidebar( id ) ) {
 					// Calculate offset
 					var offset;
-
+	
 					if ( offCanvas[ id ].side === 'top' || offCanvas[ id ].side === 'bottom' ) {
 						offset = offCanvas[ id ].element.css( 'height' );
 					} else {
 						offset = offCanvas[ id ].element.css( 'width' );
 					}
-
+	
 					// Apply negative margins
 					if ( offCanvas[ id ].style === 'push' || offCanvas[ id ].style === 'overlay' || offCanvas[ id ].style === 'shift' ) {
 						offCanvas[ id ].element.css( 'margin-' + offCanvas[ id ].side, '-' + offset );
 					}
 				}
 			}
-
+	
 			// Reposition open Slidebars
 			if ( this.getActiveSlidebar() ) {
 				this.open( this.getActiveSlidebar() );
 			}
-
+	
 			// Trigger event
 			$( events ).trigger( 'css' );
-
+	
 			// Run callback
 			if ( typeof callback === 'function' ) {
 				callback();
 			}
 		};
-
+	
 		/**
 		 * Controls
 		 */
-
+	
 		this.open = function ( id, callback ) {
 			// Check if Slidebars has been initialized
 			if ( ! init ) {
 				throw "Slidebars hasn't been initialized.";
 			}
-
+	
 			// Check if id wasn't passed or if Slidebar isn't registered
 			if ( ! id || ! isRegisteredSlidebar( id ) ) {
 				throw "Error opening Slidebar, there is no Slidebar with id '" + id + "'.";
 			}
-
+	
 			// Open
 			var open = function () {
 				// Set active state to true
 				offCanvas[ id ].active = true;
-
+	
 				// Display the Slidebar
 				offCanvas[ id ].element.css( 'display', 'block' );
-
+	
 				// Trigger event
 				$( events ).trigger( 'opening', [ offCanvas[ id ].id ] );
-
+	
 				// Get animation properties
 				var animationProperties = getAnimationProperties( id );
-
+	
 				// Apply css
 				animationProperties.elements.css( {
 					'transition-duration': animationProperties.duration + 'ms',
 					'transform': 'translate(' + animationProperties.amount + ')'
 				} );
-
+	
 				// Transition completed
 				setTimeout( function () {
 					// Trigger event
 					$( events ).trigger( 'opened', [ offCanvas[ id ].id ] );
-
+	
 					// Run callback
 					if ( typeof callback === 'function' ) {
 						callback();
 					}
 				}, animationProperties.duration );
 			};
-
+	
 			// Call open, close open Slidebar if active
 			if ( this.getActiveSlidebar() && this.getActiveSlidebar() !== id ) {
 				this.close( open );
@@ -846,54 +846,54 @@
 				open();
 			}
 		};
-
+	
 		this.close = function ( id, callback ) {
 			// Shift callback arguments
 			if ( typeof id === 'function' ) {
 				callback = id;
 				id = null;
 			}
-
+	
 			// Check if Slidebars has been initialized
 			if ( ! init ) {
 				throw "Slidebars hasn't been initialized.";
 			}
-
+	
 			// Check if id was passed but isn't a registered Slidebar
 			if ( id && ! isRegisteredSlidebar( id ) ) {
 				throw "Error closing Slidebar, there is no Slidebar with id '" + id + "'.";
 			}
-
+	
 			// If no id was passed, get the active Slidebar
 			if ( ! id ) {
 				id = this.getActiveSlidebar();
 			}
-
+	
 			// Close a Slidebar
 			if ( id && offCanvas[ id ].active ) {
 				// Set active state to false
 				offCanvas[ id ].active = false;
-
+	
 				// Trigger event
 				$( events ).trigger( 'closing', [ offCanvas[ id ].id ] );
-
+	
 				// Get animation properties
 				var animationProperties = getAnimationProperties( id );
-
+	
 				// Apply css
 				animationProperties.elements.css( 'transform', '' );
-
+	
 				// Transition completetion
 				setTimeout( function () {
 					// Remove transition duration
 					animationProperties.elements.css( 'transition-duration', '' );
-
+	
 					// Hide the Slidebar
 					offCanvas[ id ].element.css( 'display', '' );
-
+	
 					// Trigger event
 					$( events ).trigger( 'closed', [ offCanvas[ id ].id ] );
-
+	
 					// Run callback
 					if ( typeof callback === 'function' ) {
 						callback();
@@ -901,18 +901,18 @@
 				}, animationProperties.duration );
 			}
 		};
-
+	
 		this.toggle = function ( id, callback ) {
 			// Check if Slidebars has been initialized
 			if ( ! init ) {
 				throw "Slidebars hasn't been initialized.";
 			}
-
+	
 			// Check if id wasn't passed or if Slidebar isn't registered
 			if ( ! id || ! isRegisteredSlidebar( id ) ) {
 				throw "Error toggling Slidebar, there is no Slidebar with id '" + id + "'.";
 			}
-
+	
 			// Check Slidebar state
 			if ( offCanvas[ id ].active ) {
 				// It's open, close it
@@ -932,45 +932,45 @@
 				} );
 			}
 		};
-
+	
 		/**
 		 * Active States
 		 */
-
+	
 		this.isActive = function ( id ) {
 			// Return init state
 			return init;
 		};
-
+	
 		this.isActiveSlidebar = function ( id ) {
 			// Check if Slidebars has been initialized
 			if ( ! init ) {
 				throw "Slidebars hasn't been initialized.";
 			}
-
+	
 			// Check if id wasn't passed
 			if ( ! id ) {
 				throw "You must provide a Slidebar id.";
 			}
-
+	
 			// Check if Slidebar is registered
 			if ( ! isRegisteredSlidebar( id ) ) {
 				throw "Error retrieving Slidebar, there is no Slidebar with id '" + id + "'.";
 			}
-
+	
 			// Return the active state
 			return offCanvas[ id ].active;
 		};
-
+	
 		this.getActiveSlidebar = function () {
 			// Check if Slidebars has been initialized
 			if ( ! init ) {
 				throw "Slidebars hasn't been initialized.";
 			}
-
+	
 			// Variable to return
 			var active = false;
-
+	
 			// Loop through Slidebars
 			for ( var id in offCanvas ) {
 				// Check if Slidebar is registered
@@ -983,20 +983,20 @@
 					}
 				}
 			}
-
+	
 			// Return
 			return active;
 		};
-
+	
 		this.getSlidebars = function () {
 			// Check if Slidebars has been initialized
 			if ( ! init ) {
 				throw "Slidebars hasn't been initialized.";
 			}
-
+	
 			// Create an array for the Slidebars
 			var slidebarsArray = [];
-
+	
 			// Loop through Slidebars
 			for ( var id in offCanvas ) {
 				// Check if Slidebar is registered
@@ -1005,45 +1005,45 @@
 					slidebarsArray.push( offCanvas[ id ].id );
 				}
 			}
-
+	
 			// Return
 			return slidebarsArray;
 		};
-
+	
 		this.getSlidebar = function ( id ) {
 			// Check if Slidebars has been initialized
 			if ( ! init ) {
 				throw "Slidebars hasn't been initialized.";
 			}
-
+	
 			// Check if id wasn't passed
 			if ( ! id ) {
 				throw "You must pass a Slidebar id.";
 			}
-
+	
 			// Check if Slidebar is registered
 			if ( ! id || ! isRegisteredSlidebar( id ) ) {
 				throw "Error retrieving Slidebar, there is no Slidebar with id '" + id + "'.";
 			}
-
+	
 			// Return the Slidebar's properties
 			return offCanvas[ id ];
 		};
-
+	
 		/**
 		 * Events
 		 */
-
+	
 		this.events = {};
 		var events = this.events;
-
+	
 		/**
 		 * Resizes
 		 */
-
+	
 		$( window ).on( 'resize', this.css.bind( this ) );
 	};
-
+	
 	module.exports = slidebars;
 
 
